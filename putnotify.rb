@@ -3,12 +3,12 @@
 require "rubygems"
 require "aws-sdk"
 
-msg = ARGV[0]
-msg ||= STDIN.read
+message = ARGV.shift
+message ||= STDIN.read.chomp
 
 AWS.config(:sns_endpoint => "sns.ap-northeast-1.amazonaws.com")
 sns = AWS::SNS.new
-topics = sns.topics
-topic = topics.create("cpustat")
-topic.publish(msg)
+topic = sns.topics.create("cpustat")
+topic.publish(message)
+puts "send to topics [#{message}]"
 
