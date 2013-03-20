@@ -42,33 +42,33 @@ function listBillingStatistics() {
     $metrics = $cw->listMetrics(array(
       'Namespace'  => 'AWS/Billing', 
       'MetricName' => 'EstimatedCharges', 
-		)); 
+    )); 
     foreach($metrics['Metrics'] as $metric) { 
-			# Dimensions must be set (if not set statistics returns empty value)
-			# StartTime must be set at least 4 hours by now.
-			# Billing statistic is "MAXIMUM" only.
-		  $stats = $cw->getMetricStatistics(array( 
-		    'Namespace'  => $metric['Namespace'],
-		    'MetricName' => $metric['MetricName'],
-		    'Dimensions' => $metric['Dimensions'], 
-			  'StartTime'  => strtotime('-4 hour'),
-			  'EndTime'    => strtotime('now'),
-		    'Period'     => 60, 
-		    'Statistics' => array(Statistic::MAXIMUM), 
-		  )); 
-		  foreach($stats->get('Datapoints') as $dp) { 
-				foreach($metric['Dimensions'] as $dimension) {
-					if ($dimension['Value'] != 'USD') {
-						printf("%s=%s (%s)\n", $dimension['Value'], $dp['Maximum'], $dp['Timestamp']); 
-					}
-				}
-		  } 
+      # Dimensions must be set (if not set statistics returns empty value)
+      # StartTime must be set at least 4 hours by now.
+      # Billing statistic is "MAXIMUM" only.
+      $stats = $cw->getMetricStatistics(array( 
+        'Namespace'  => $metric['Namespace'],
+        'MetricName' => $metric['MetricName'],
+        'Dimensions' => $metric['Dimensions'], 
+        'StartTime'  => strtotime('-4 hour'),
+        'EndTime'    => strtotime('now'),
+        'Period'     => 60, 
+        'Statistics' => array(Statistic::MAXIMUM), 
+      )); 
+      foreach($stats->get('Datapoints') as $dp) { 
+        foreach($metric['Dimensions'] as $dimension) {
+          if ($dimension['Value'] != 'USD') {
+            printf("%s=%s (%s)\n", $dimension['Value'], $dp['Maximum'], $dp['Timestamp']); 
+          }
+        }
+      } 
     } 
-	} catch(Aws\CloudWatch\Exception\CloudWatchException $e) {
-	  die($e->getMessage());
+  } catch(Aws\CloudWatch\Exception\CloudWatchException $e) {
+    die($e->getMessage());
   } catch(Exception $other) { 
     die($other->getMessage()); 
-	}
+  }
 }
 
 listBillingMetrics();
