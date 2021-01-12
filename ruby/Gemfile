@@ -2,4 +2,5 @@
 source "https://rubygems.org"
 
 # gem "rails"
-gem "aws-sdk"
+gem 'aws-sdk', '~> 3'
+gem "json", ">= 2.3.0"
